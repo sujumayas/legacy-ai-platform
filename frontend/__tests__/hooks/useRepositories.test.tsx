@@ -1,8 +1,9 @@
 import { renderHook, act } from '@testing-library/react';
 import { useRepositories } from '@/hooks/useRepositories';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 // Mock fetch globally
-const mockFetch = jest.fn();
+const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
 describe('useRepositories', () => {
