@@ -4,17 +4,24 @@ import GithubProvider from 'next-auth/providers/github'
 const handler = NextAuth({
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+      clientId: process.env.GITHUB_ID!,
+      clientSecret: process.env.GITHUB_SECRET!,
       // We'll request additional scopes for repo access
       scope: 'read:user repo'
     }),
   ],
+  session: {
+    strategy: 'jwt',
+  },
+  pages: {
+    signIn: '/login',
+  },
   callbacks: {
     async jwt({ token, account }) {
-      // Persist the OAuth access_token to the token right after signin
+      // Persist the OAuth access_token and provider to the token right after signin
       if (account) {
         token.accessToken = account.access_token
+        token.provider = account.provider
       }
       return token
     },
@@ -23,9 +30,6 @@ const handler = NextAuth({
       session.accessToken = token.accessToken
       return session
     },
-  },
-  pages: {
-    signIn: '/login',
   },
 })
 
