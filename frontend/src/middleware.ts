@@ -1,15 +1,10 @@
-import { withAuth } from 'next-auth/middleware'
+import { withAuth } from 'next-auth/middleware';
 
-export default withAuth(
-  function middleware(req) {
-    // Add custom middleware logic here if needed
+export default withAuth({
+  callbacks: {
+    authorized: ({ token }) => !!token,
   },
-  {
-    callbacks: {
-      authorized: ({ token }) => !!token,
-    },
-  }
-)
+});
 
 export const config = {
   matcher: [
@@ -17,4 +12,4 @@ export const config = {
     '/repos/:path*',
     '/workflows/:path*',
   ],
-}
+};
