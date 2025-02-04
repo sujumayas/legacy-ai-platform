@@ -8,3 +8,8 @@ pytest==7.4.4
 black==24.1.0
 flake8==7.0.0
 gunicorn==21.2.0
+SQLAlchemy==2.0.25
+alembic==1.13.1
+psycopg2-binary==2.9.9
+python-dateutil==2.8.2
+PyGithub==2.1.1
