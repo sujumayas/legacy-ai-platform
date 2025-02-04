@@ -1,6 +1,6 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useRepositories } from '@/hooks/useRepositories';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 // Mock fetch globally
 const mockFetch = vi.fn();
@@ -8,7 +8,7 @@ global.fetch = mockFetch;
 
 describe('useRepositories', () => {
   beforeEach(() => {
-    mockFetch.mockClear();
+    vi.clearAllMocks();
   });
 
   it('should fetch repositories successfully', async () => {
