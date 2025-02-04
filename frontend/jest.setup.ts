@@ -1,27 +1,27 @@
 import '@testing-library/jest-dom';
-import type { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 const mockRouter = {
   route: '/',
   pathname: '',
   query: '',
   asPath: '',
-  push: () => Promise.resolve(true),
+  push: vi.fn(),
   events: {
-    on: () => jest.fn(),
-    off: () => jest.fn()
+    on: vi.fn(),
+    off: vi.fn()
   },
-  beforePopState: () => jest.fn(),
-  prefetch: () => Promise.resolve()
+  beforePopState: vi.fn(),
+  prefetch: vi.fn()
 };
 
 // Mock next/router
-jest.mock('next/router', () => ({
+vi.mock('next/router', () => ({
   useRouter: () => mockRouter
 }));
 
 // Mock lucide-react icons
-jest.mock('lucide-react', () => ({
+vi.mock('lucide-react', () => ({
   Ban: () => '<div data-testid="ban-icon" />',
   GitFork: () => '<div data-testid="git-fork-icon" />',
   ExternalLink: () => '<div data-testid="external-link-icon" />',
