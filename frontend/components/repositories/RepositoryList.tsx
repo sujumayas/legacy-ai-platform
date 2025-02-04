@@ -1,58 +1,66 @@
 import React from 'react';
-import { Repository } from '@/types/repository';
 import { RepositoryCard } from './RepositoryCard';
-
-// Sample data for development
-const sampleRepositories: Repository[] = [
-  {
-    id: 1,
-    github_url: 'https://github.com/example/java-legacy',
-    name: 'java-legacy',
-    owner: 'example',
-    default_branch: 'main',
-    status: 'ready',
-    last_analyzed: null,
-    error_message: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    user_id: 1
-  },
-  {
-    id: 2,
-    github_url: 'https://github.com/example/spring-app',
-    name: 'spring-app',
-    owner: 'example',
-    default_branch: 'master',
-    status: 'analyzing',
-    last_analyzed: new Date().toISOString(),
-    error_message: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    user_id: 1
-  }
-];
+import { RepositoryCardSkeleton } from './RepositoryCardSkeleton';
+import { useRepositories } from '@/hooks/useRepositories';
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Ban, AlertTriangle } from "lucide-react";
 
 export const RepositoryList: React.FC = () => {
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-gray-900">Your Repositories</h2>
-      </div>
+  const { repositories, loading, error, refetch } = useRepositories();
 
+  if (error) {
+    return (
+      <Alert variant="destructive" className="mb-4">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertDescription>
+          {error}
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="grid gap-4">
+          {[...Array(3)].map((_, index) => (
+            <RepositoryCardSkeleton key={index} />
+          ))}
+        </div>
+      );
+    }
+
+    if (repositories.length === 0) {
+      return (
+        <div className="text-center py-12">
+          <Ban className="mx-auto h-12 w-12 text-gray-400" />
+          <h3 className="mt-2 text-sm font-medium text-gray-900">No Repositories</h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Get started by connecting a repository.
+          </p>
+        </div>
+      );
+    }
+
+    return (
       <div className="grid gap-4">
-        {sampleRepositories.map((repo) => (
+        {repositories.map((repo) => (
           <RepositoryCard 
             key={repo.id} 
             repository={repo}
           />
         ))}
       </div>
+    );
+  };
 
-      {sampleRepositories.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">No repositories connected yet.</p>
-        </div>
-      )}
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold text-gray-900">Your Repositories</h2>
+      </div>
+
+      {renderContent()}
     </div>
   );
 };
